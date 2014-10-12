@@ -42,3 +42,7 @@ Tail system log highlighting service numbers
 Tail system log highlighting date time  
 
 	tl -f=system.log -r="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}"
+
+Tail application rolling logs, highlighting logon, with log name prefixes
+
+	tl -f=application.log* -p -r=logon

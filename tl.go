@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -88,45 +89,51 @@ func main() {
 			continue
 		}
 
-		go func(file string) {
+		fileList, _ := filepath.Glob(file)
 
-			var regs []*regexp.Regexp
+		for _, expandedFile := range fileList {
 
-			if len(patternList) >= 1 {
-				for _, pat := range patternList {
-					regs = append(regs, regexp.MustCompile(pat))
-				}
-			}
+			go func(file string) {
 
-			location := &tail.SeekInfo{Offset: 0, Whence: os.SEEK_END}
+				var regs []*regexp.Regexp
 
-			t, err := tail.TailFile(file, tail.Config{Follow: true, ReOpen: true, Location: location})
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			for line := range t.Lines {
-
-				output := line.Text
-				if len(regs) >= 1 {
-					for i, reg := range regs {
-
-						process := func(s string) string {
-							return colourList[i](s)
-						}
-
-						output = reg.ReplaceAllStringFunc(output, process)
+				if len(patternList) >= 1 {
+					for _, pat := range patternList {
+						regs = append(regs, regexp.MustCompile(pat))
 					}
 				}
 
-				if *prefix {
-					fmt.Println(file, output)
-				} else {
-					fmt.Println(output)
+				location := &tail.SeekInfo{Offset: 0, Whence: os.SEEK_END}
+
+				t, err := tail.TailFile(file, tail.Config{Follow: true, ReOpen: true, Location: location})
+				if err != nil {
+					fmt.Println(err)
+					return
 				}
-			}
-		}(file)
+
+				for line := range t.Lines {
+
+					output := line.Text
+					if len(regs) >= 1 {
+						for i, reg := range regs {
+
+							process := func(s string) string {
+								return colourList[i](s)
+							}
+
+							output = reg.ReplaceAllStringFunc(output, process)
+						}
+					}
+
+					if *prefix {
+						fmt.Println(file, output)
+					} else {
+						fmt.Println(output)
+					}
+				}
+			}(expandedFile)
+
+		}
 
 	}
 
