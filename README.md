@@ -33,4 +33,12 @@ Tail install and system log files, alerting with various colours for specific ev
 
 Tail install and system log files, alerting on network activity and loss of network, having switched delimiter  
 
-	tl -f=install.log,system.log -d="|" -r="not reachable, netbiosd|network" -c="r|m"
+	tl -f=install.log,system.log -d="|" -r="not reachable, netbiosd|network" -c="r|m"  
+
+Tail system log highlighting service numbers  
+
+	tl -f=system.log -r=service\[[0-9]*\]
+
+Tail system log highlighting date time  
+
+	tl -f=system.log -r="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}"
