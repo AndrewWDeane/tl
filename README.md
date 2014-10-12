@@ -24,9 +24,13 @@ Available colours:
 default = r
 
 
-Example
+Examples
 -------
 
 Tail install and system log files, alerting with various colours for specific events.  
 
 	tl -f=install.log,system.log -r="install,failed,network is,Unrecognized leaf certificate" -c=y,r,b,r
+
+Tail install and system log files, alerting on network activity and loss of network, having switched delimiter  
+
+	tl -f=install.log,system.log -d="|" -r="not reachable, netbiosd|network" -c="r|m"
