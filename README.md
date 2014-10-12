@@ -29,4 +29,4 @@ Example
 
 Tail install and system log files, alerting with various colours for specific events.  
 
-tl -f=install.log,system.log -r="install,failed,network is,Unrecognized leaf certificate" -c=y,r,b,r
+	tl -f=install.log,system.log -r="install,failed,network is,Unrecognized leaf certificate" -c=y,r,b,r
